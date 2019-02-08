@@ -2,15 +2,16 @@ package com.example.android.baccalculator;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     public int ozOfAlcoholConsumed = 0;
     public int drinkSizeInt = 0;
     public double alcoholPercentage = 0;
-    double bacResult = 0.00;
+    double bacResultDouble = 0.00;
 
     EditText userWeightEditText;
     Switch genderSwitch;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     RadioGroup radioGroup;
     RadioButton radioButton;
     TextView bacResultTextView;
+    ProgressBar progressBar;
+    TextView statusResult;
     String genderString = "";
 
     @Override
@@ -43,19 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         userWeightEditText = findViewById(R.id.weightEditText);
         genderSwitch = findViewById(R.id.genderSwitch);
-
-/*        genderSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(genderSwitch.isChecked()){
-                    genderString = genderSwitch.getTextOn().toString();
-                    genderValue = 0.68;
-                }else{
-                    genderString = genderSwitch.getTextOff().toString();
-                    genderValue = 0.55;
-                }
-            }
-        });*/
 
 
         //when user enters weight and gender, and then clicked saved.
@@ -111,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.addDrinkButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(((EditText) findViewById(R.id.weightEditText)).getText().toString().equals("")){
+                if(userWeightInt == 0){
                     userWeightEditText.setError("Enter a weight in lbs");
                 }else{
                     bacResultTextView = findViewById(R.id.BACresult);
@@ -123,23 +113,47 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (radioButton.getText().toString()){
                         case "1 oz":
-                            bacResult = ((1 *alcoholPercentage)*6.24 / (userWeightInt * genderValue));
-                            bacResultTextView.setText("" + String.format("%.2f", bacResult));
+                            bacResultDouble = ((1 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)) + bacResultDouble;
+                            bacResultTextView.setText("" + String.format("%.2f", bacResultDouble));
                             break;
-
                         case "5 oz":
-                            bacResult = ((5 *alcoholPercentage)*6.24 / (userWeightInt * genderValue));
-                            bacResultTextView.setText("" + String.format("%.2f", bacResult));
+                            bacResultDouble = ((5 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)+ bacResultDouble);
+                            bacResultTextView.setText("" + String.format("%.2f", bacResultDouble));
                             break;
                         case "12 oz":
-                            bacResult = ((12 *alcoholPercentage)*6.24 / (userWeightInt * genderValue));
-                            bacResultTextView.setText("" + String.format("%.2f", bacResult));
+                            bacResultDouble = ((12 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)+ bacResultDouble);
+                            bacResultTextView.setText("" + String.format("%.2f", bacResultDouble));
                             break;
 
                     }
 
-                    //ozOfAlcoholConsumed =
+                    int bacResultInt = (int)(bacResultDouble * 100);
+                    progressBar = findViewById(R.id.progressBar);
+                    progressBar.setProgress(bacResultInt);
+
+                    statusResult = findViewById(R.id.statusResult);
+                    if(bacResultDouble <=0.08){
+                        statusResult.setText("You're safe.");
+                    }else if(bacResultDouble >0.08 && bacResultDouble<0.20){
+                        statusResult.setText("Be careful.");
+                    }else if(bacResultDouble >=0.20){
+                        statusResult.setText("Over the limit!!");
+                        if(bacResultDouble>=0.25){
+                        findViewById(R.id.addDrinkButton).setEnabled(false);
+                        findViewById(R.id.saveButton).setEnabled(false);
+                            Toast toast = Toast.makeText(getApplicationContext(), "No more drinks for you!!", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    }
                 }
+            }
+        });
+
+        findViewById(R.id.resetButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
