@@ -4,7 +4,7 @@
     <string name="userWeight">Enter Weight</string>
     <string name="genderSwitch">Gender</string>
     <string name="maleSwitch">M</string>
-    <string name="femaleSwitch">F</string>
+    <string name="femaleSwitch" translatable="false">F</string>
     <string name="saveButton">Save</string>
     <string name="oneOunceRadioButton">1 oz</string>
     <string name="fiveOunceRadioButton">5 oz</string>
@@ -18,4 +18,5 @@
     <string name="statusLabel">Your Status:</string>
     <string name="statusResult">You\'re Safe</string>
     <string name="percentSign">%1$s %%</string>
+
 </resources>

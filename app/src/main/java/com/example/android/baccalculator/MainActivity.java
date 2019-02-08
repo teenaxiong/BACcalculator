@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -13,11 +15,20 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     public int userWeightInt = 0;
-    public String genderString;
+    public double genderValue;
+    public int ozOfAlcoholConsumed = 0;
+    public int drinkSizeInt = 0;
+    public double alcoholPercentage = 0;
+    double bacResult = 0.00;
+
     EditText userWeightEditText;
     Switch genderSwitch;
     SeekBar alcoholSeekBar;
     TextView percentAlcoholTextView;
+    RadioGroup radioGroup;
+    RadioButton radioButton;
+    TextView bacResultTextView;
+    String genderString = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +44,18 @@ public class MainActivity extends AppCompatActivity {
         userWeightEditText = findViewById(R.id.weightEditText);
         genderSwitch = findViewById(R.id.genderSwitch);
 
-
+/*        genderSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(genderSwitch.isChecked()){
+                    genderString = genderSwitch.getTextOn().toString();
+                    genderValue = 0.68;
+                }else{
+                    genderString = genderSwitch.getTextOff().toString();
+                    genderValue = 0.55;
+                }
+            }
+        });*/
 
 
         //when user enters weight and gender, and then clicked saved.
@@ -48,9 +70,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if(genderSwitch.isChecked()){
                     genderString = genderSwitch.getTextOn().toString();
-                }else{
+                    genderValue = 0.68;
+                }else {
                     genderString = genderSwitch.getTextOff().toString();
+                    genderValue = 0.55;
                 }
+
+
             }
         });
 
@@ -67,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
         alcoholSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.d("demo", progress + "");
-
                // progress = (progress / 5);
                 progress = 5 + (progress * 5);
                 percentAlcoholTextView.setText(getString(R.string.percentSign, String.valueOf(progress)) );
@@ -83,13 +107,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //when user clicks on the Add Drink button
         findViewById(R.id.addDrinkButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(((EditText) findViewById(R.id.weightEditText)).getText().toString().equals("")){
                     userWeightEditText.setError("Enter a weight in lbs");
                 }else{
+                    bacResultTextView = findViewById(R.id.BACresult);
+                    radioGroup = findViewById(R.id.drinkSizeGroup);
+                    int checkRadioGroupInt = radioGroup.getCheckedRadioButtonId();
+                    radioButton = findViewById(checkRadioGroupInt);
+                    alcoholPercentage = (alcoholSeekBar.getProgress()*5 + 5) / 100.0;
 
+
+                    switch (radioButton.getText().toString()){
+                        case "1 oz":
+                            bacResult = ((1 *alcoholPercentage)*6.24 / (userWeightInt * genderValue));
+                            bacResultTextView.setText("" + String.format("%.2f", bacResult));
+                            break;
+
+                        case "5 oz":
+                            bacResult = ((5 *alcoholPercentage)*6.24 / (userWeightInt * genderValue));
+                            bacResultTextView.setText("" + String.format("%.2f", bacResult));
+                            break;
+                        case "12 oz":
+                            bacResult = ((12 *alcoholPercentage)*6.24 / (userWeightInt * genderValue));
+                            bacResultTextView.setText("" + String.format("%.2f", bacResult));
+                            break;
+
+                    }
+
+                    //ozOfAlcoholConsumed =
                 }
             }
         });
