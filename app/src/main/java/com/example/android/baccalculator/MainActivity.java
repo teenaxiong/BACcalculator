@@ -2,6 +2,7 @@ package com.example.android.baccalculator;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -46,6 +47,17 @@ public class MainActivity extends AppCompatActivity {
 
         userWeightEditText = findViewById(R.id.weightEditText);
         genderSwitch = findViewById(R.id.genderSwitch);
+        radioGroup = findViewById(R.id.drinkSizeGroup);
+        alcoholSeekBar = findViewById(R.id.alcoholSeekBar);
+        percentAlcoholTextView = findViewById(R.id.percentAlcohol);
+        progressBar = findViewById(R.id.progressBar);
+        bacResultTextView = findViewById(R.id.BACresult);
+
+        //setting initial value to 5%
+        percentAlcoholTextView.setText(getString(R.string.percentSign,String.valueOf(alcoholSeekBar.getProgress()*5+5)));
+
+        //max minus min, divide by # of steps to get set the max of the seekbar
+        alcoholSeekBar.setMax( (25 - 5) / 5 );
 
 
         //when user enters weight and gender, and then clicked saved.
@@ -70,14 +82,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        alcoholSeekBar = findViewById(R.id.alcoholSeekBar);
-        percentAlcoholTextView = findViewById(R.id.percentAlcohol);
-
-        //setting initial value to 5%
-        percentAlcoholTextView.setText(getString(R.string.percentSign,String.valueOf(alcoholSeekBar.getProgress()*5+5)));
-
-        //max minus min, divide by # of steps to get set the max of the seekbar
-        alcoholSeekBar.setMax( (25 - 5) / 5 );
 
         //when user drags the alcohol seekbar
         alcoholSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -104,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 if(userWeightInt == 0){
                     userWeightEditText.setError("Enter a weight in lbs");
                 }else{
-                    bacResultTextView = findViewById(R.id.BACresult);
-                    radioGroup = findViewById(R.id.drinkSizeGroup);
                     int checkRadioGroupInt = radioGroup.getCheckedRadioButtonId();
                     radioButton = findViewById(checkRadioGroupInt);
                     alcoholPercentage = (alcoholSeekBar.getProgress()*5 + 5) / 100.0;
@@ -114,21 +116,23 @@ public class MainActivity extends AppCompatActivity {
                     switch (radioButton.getText().toString()){
                         case "1 oz":
                             bacResultDouble = ((1 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)) + bacResultDouble;
-                            bacResultTextView.setText("" + String.format("%.2f", bacResultDouble));
+                            bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
+                            bacResultTextView.setText(""+bacResultDouble);
                             break;
                         case "5 oz":
                             bacResultDouble = ((5 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)+ bacResultDouble);
-                            bacResultTextView.setText("" + String.format("%.2f", bacResultDouble));
+                            bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
+                            bacResultTextView.setText(""+bacResultDouble);
                             break;
                         case "12 oz":
                             bacResultDouble = ((12 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)+ bacResultDouble);
-                            bacResultTextView.setText("" + String.format("%.2f", bacResultDouble));
+                            bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
+                            bacResultTextView.setText(""+bacResultDouble);
                             break;
-
                     }
 
+
                     int bacResultInt = (int)(bacResultDouble * 100);
-                    progressBar = findViewById(R.id.progressBar);
                     progressBar.setProgress(bacResultInt);
 
                     statusResult = findViewById(R.id.statusResult);
@@ -136,15 +140,14 @@ public class MainActivity extends AppCompatActivity {
                         statusResult.setText("You're safe.");
                     }else if(bacResultDouble >0.08 && bacResultDouble<0.20){
                         statusResult.setText("Be careful.");
-                    }else if(bacResultDouble >=0.20){
+                    }else if(bacResultDouble >=0.20 && bacResultDouble<0.25){
                         statusResult.setText("Over the limit!!");
-                        if(bacResultDouble>=0.25){
+                    }else  if(bacResultDouble>=0.25){
                         findViewById(R.id.addDrinkButton).setEnabled(false);
                         findViewById(R.id.saveButton).setEnabled(false);
-                            Toast toast = Toast.makeText(getApplicationContext(), "No more drinks for you!!", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                        }
+                        Toast toast = Toast.makeText(getApplicationContext(), "No more drinks for you!!", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
                     }
                 }
             }
@@ -153,7 +156,18 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.resetButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                userWeightEditText.setText(null);
+                userWeightInt = 0;
+                genderSwitch.setChecked(false);
+                genderValue = 0;
+                radioGroup.check(R.id.oneOunceRadioButton);
+                alcoholSeekBar.setProgress(0);
+                percentAlcoholTextView.setText(getString(R.string.percentSign,String.valueOf(alcoholSeekBar.getProgress()*5+5)));
+                progressBar.setProgress(0);
+                bacResultTextView.setText(null);
+                bacResultDouble = 0.00;
+                findViewById(R.id.saveButton).setEnabled(true);
+                findViewById(R.id.addDrinkButton).setEnabled(true);
             }
         });
 
