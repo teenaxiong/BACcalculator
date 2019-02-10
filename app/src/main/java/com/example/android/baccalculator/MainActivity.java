@@ -20,8 +20,6 @@ public class MainActivity extends AppCompatActivity {
 
     public int userWeightInt = 0;
     public double genderValue;
-    public int ozOfAlcoholConsumed = 0;
-    public int drinkSizeInt = 0;
     public double alcoholPercentage = 0;
     private double bacResultDouble = 0.00;
     ArrayList <Double> ouncesConsumedArray = new ArrayList<>();
@@ -157,9 +155,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }//end of method
 
-    public void updateProgressBar(){Log.d("demo", "i get call ");
+    public void updateProgressBar(){
         bacResultTextView.setText(""+bacResultDouble);
         int bacResultInt = (int)(bacResultDouble * 100);
         progressBar.setProgress(bacResultInt);
@@ -188,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
         bacResultDouble = 0.00;
          bacResultDouble = (ouncesConsumedTotal*6.24 / (userWeightInt * genderValue));
         bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
-
     }
 
     public void calculateBac(double a){
