@@ -14,6 +14,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     public int userWeightInt = 0;
@@ -21,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
     public int ozOfAlcoholConsumed = 0;
     public int drinkSizeInt = 0;
     public double alcoholPercentage = 0;
-    double bacResultDouble = 0.00;
+    private double bacResultDouble = 0.00;
+    ArrayList <Double> ouncesConsumedArray = new ArrayList<>();
 
     EditText userWeightEditText;
     Switch genderSwitch;
@@ -64,21 +67,22 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userWeightEditText.getText().toString().equals("")){
+                if (userWeightEditText.getText().toString().equals("")) {
                     userWeightEditText.setError("Enter your weight here.");
-                }else{
+                } else  {
                     userWeightInt = Integer.parseInt(userWeightEditText.getText().toString());
+
+                    if (genderSwitch.isChecked()) {
+                        genderString = genderSwitch.getTextOn().toString();
+                        genderValue = 0.68;
+                    } else {
+                        genderString = genderSwitch.getTextOff().toString();
+                        genderValue = 0.55;
+                    }
+
+                    reCalculateBAC();
+                    updateProgressBar();
                 }
-
-                if(genderSwitch.isChecked()){
-                    genderString = genderSwitch.getTextOn().toString();
-                    genderValue = 0.68;
-                }else {
-                    genderString = genderSwitch.getTextOff().toString();
-                    genderValue = 0.55;
-                }
-
-
             }
         });
 
@@ -115,40 +119,21 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (radioButton.getText().toString()){
                         case "1 oz":
-                            bacResultDouble = ((1 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)) + bacResultDouble;
-                            bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
-                            bacResultTextView.setText(""+bacResultDouble);
+                            ouncesConsumedArray.add((1 *alcoholPercentage));
+                            calculateBac(1 *alcoholPercentage);
+
                             break;
                         case "5 oz":
-                            bacResultDouble = ((5 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)+ bacResultDouble);
-                            bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
-                            bacResultTextView.setText(""+bacResultDouble);
+                            ouncesConsumedArray.add((5 *alcoholPercentage));
+                            calculateBac(5 *alcoholPercentage);
+
                             break;
                         case "12 oz":
-                            bacResultDouble = ((12 *alcoholPercentage)*6.24 / (userWeightInt * genderValue)+ bacResultDouble);
-                            bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
-                            bacResultTextView.setText(""+bacResultDouble);
+                            ouncesConsumedArray.add((12 *alcoholPercentage));
+                            calculateBac(12 *alcoholPercentage);
                             break;
                     }
-
-
-                    int bacResultInt = (int)(bacResultDouble * 100);
-                    progressBar.setProgress(bacResultInt);
-
-                    statusResult = findViewById(R.id.statusResult);
-                    if(bacResultDouble <=0.08){
-                        statusResult.setText("You're safe.");
-                    }else if(bacResultDouble >0.08 && bacResultDouble<0.20){
-                        statusResult.setText("Be careful.");
-                    }else if(bacResultDouble >=0.20 && bacResultDouble<0.25){
-                        statusResult.setText("Over the limit!!");
-                    }else  if(bacResultDouble>=0.25){
-                        findViewById(R.id.addDrinkButton).setEnabled(false);
-                        findViewById(R.id.saveButton).setEnabled(false);
-                        Toast toast = Toast.makeText(getApplicationContext(), "No more drinks for you!!", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                    }
+                    updateProgressBar();
                 }
             }
         });
@@ -168,8 +153,47 @@ public class MainActivity extends AppCompatActivity {
                 bacResultDouble = 0.00;
                 findViewById(R.id.saveButton).setEnabled(true);
                 findViewById(R.id.addDrinkButton).setEnabled(true);
+                ouncesConsumedArray.clear();
             }
         });
 
     }
+
+    public void updateProgressBar(){Log.d("demo", "i get call ");
+        bacResultTextView.setText(""+bacResultDouble);
+        int bacResultInt = (int)(bacResultDouble * 100);
+        progressBar.setProgress(bacResultInt);
+
+        statusResult = findViewById(R.id.statusResult);
+        if(bacResultDouble <=0.08){
+            statusResult.setText("You're safe.");
+        }else if(bacResultDouble >0.08 && bacResultDouble<0.20){
+            statusResult.setText("Be careful.");
+        }else if(bacResultDouble >=0.20 && bacResultDouble<0.25){
+            statusResult.setText("Over the limit!!");
+        }else  if(bacResultDouble>=0.25){
+            findViewById(R.id.addDrinkButton).setEnabled(false);
+            findViewById(R.id.saveButton).setEnabled(false);
+            Toast toast = Toast.makeText(getApplicationContext(), "No more drinks for you!!", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+    }
+
+    public void reCalculateBAC(){
+        double ouncesConsumedTotal = 0.00;
+        for (Double b: ouncesConsumedArray) {
+            ouncesConsumedTotal = ouncesConsumedTotal + b;
+        }
+        bacResultDouble = 0.00;
+         bacResultDouble = (ouncesConsumedTotal*6.24 / (userWeightInt * genderValue));
+        bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
+
+    }
+
+    public void calculateBac(double a){
+        bacResultDouble = ((a)*6.24 / (userWeightInt * genderValue)) + bacResultDouble;
+        bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
+    }
+
 }
