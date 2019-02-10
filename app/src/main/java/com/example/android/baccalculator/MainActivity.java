@@ -196,4 +196,5 @@ public class MainActivity extends AppCompatActivity {
         bacResultDouble = Math.round(bacResultDouble *100.0)/100.0;
     }
 
+
 }
