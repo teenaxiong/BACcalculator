@@ -1,5 +1,6 @@
 package com.example.android.baccalculator;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -165,10 +166,16 @@ public class MainActivity extends AppCompatActivity {
         statusResult = findViewById(R.id.statusResult);
         if(bacResultDouble <=0.08){
             statusResult.setText("You're safe.");
+            statusResult.setBackgroundResource(R.color.green);
+            statusResult.setTextColor(Color.rgb(255,255,255));
         }else if(bacResultDouble >0.08 && bacResultDouble<0.20){
             statusResult.setText("Be careful.");
+            statusResult.setBackgroundResource(R.color.yellow);
+            statusResult.setTextColor(Color.rgb(255,255,255));
         }else if(bacResultDouble >=0.20 && bacResultDouble<0.25){
             statusResult.setText("Over the limit!!");
+            statusResult.setBackgroundResource(R.color.red);
+            statusResult.setTextColor(Color.rgb(255,255,255));
         }else  if(bacResultDouble>=0.25){
             findViewById(R.id.addDrinkButton).setEnabled(false);
             findViewById(R.id.saveButton).setEnabled(false);
