@@ -1,6 +1,7 @@
 package com.example.android.baccalculator;
 
 import android.graphics.Color;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         //sets the title and the icon in the bar
         setTitle("BAC Calculator");
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setIcon(R.mipmap.ic_launcher);
 
         userWeightEditText = findViewById(R.id.weightEditText);
         genderSwitch = findViewById(R.id.genderSwitch);
@@ -114,8 +115,6 @@ public class MainActivity extends AppCompatActivity {
                     int checkRadioGroupInt = radioGroup.getCheckedRadioButtonId();
                     radioButton = findViewById(checkRadioGroupInt);
                     alcoholPercentage = (alcoholSeekBar.getProgress()*5 + 5) / 100.0;
-
-
                     switch (radioButton.getText().toString()){
                         case "1 oz":
                             ouncesConsumedArray.add((1 *alcoholPercentage));
@@ -159,21 +158,22 @@ public class MainActivity extends AppCompatActivity {
     }//end of method
 
     public void updateProgressBar(){
-        bacResultTextView.setText(""+bacResultDouble);
+        String a = Double.toString(bacResultDouble);
+        bacResultTextView.setText(a);
         int bacResultInt = (int)(bacResultDouble * 100);
         progressBar.setProgress(bacResultInt);
 
         statusResult = findViewById(R.id.statusResult);
         if(bacResultDouble <=0.08){
-            statusResult.setText("You're safe.");
+            statusResult.setText(getString(R.string.safe));
             statusResult.setBackgroundResource(R.color.green);
             statusResult.setTextColor(Color.rgb(255,255,255));
         }else if(bacResultDouble >0.08 && bacResultDouble<0.20){
-            statusResult.setText("Be careful.");
+            statusResult.setText(getString(R.string.careful));
             statusResult.setBackgroundResource(R.color.yellow);
             statusResult.setTextColor(Color.rgb(255,255,255));
         }else if(bacResultDouble >=0.20 && bacResultDouble<0.25){
-            statusResult.setText("Over the limit!!");
+            statusResult.setText(getString(R.string.overLimit));
             statusResult.setBackgroundResource(R.color.red);
             statusResult.setTextColor(Color.rgb(255,255,255));
         }else  if(bacResultDouble>=0.25){

@@ -18,5 +18,8 @@
     <string name="statusLabel">Your Status:</string>
     <string name="statusResult">You\'re Safe</string>
     <string name="percentSign">%1$s %%</string>
+    <string name="safe">You\'re Safe</string>
+    <string name="careful">Be careful</string>
+    <string name="overLimit">Over the limit!!!</string>
 
 </resources>
