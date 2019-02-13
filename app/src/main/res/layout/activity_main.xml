@@ -84,15 +84,18 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="48dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/labelWeight"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/weightEditText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/weightEditText"
-        android:layout_width="100dp"
+        android:layout_width="123dp"
         android:layout_height="42dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -100,6 +103,7 @@
         android:ems="10"
         android:hint="@string/userWeight"
         android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/genderSwitch"
         app:layout_constraintStart_toEndOf="@+id/weightLabel"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,7 +114,7 @@
         android:layout_height="18dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:checked="false"
@@ -123,7 +127,7 @@
         android:textOn="@string/maleSwitch"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.972"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/weightEditText"
         app:layout_constraintTop_toTopOf="parent"
         tools:checked="false" />
@@ -227,11 +231,14 @@
         android:id="@+id/resetButton"
         android:layout_width="190dp"
         android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/resetButton"
         app:layout_constraintBottom_toBottomOf="@+id/addDrinkButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/addDrinkButton"
         app:layout_constraintTop_toTopOf="@+id/addDrinkButton"
         app:layout_constraintVertical_bias="1.0" />
 

@@ -1,3 +1,8 @@
+//Shikha Bhattarai
+//Teena Xiong
+//hw 01
+//BAC Calculator
+
 package com.example.android.baccalculator;
 
 import android.graphics.Color;
